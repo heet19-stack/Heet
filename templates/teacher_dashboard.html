@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Automated Timetable Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>Teacher Dashboard</h1>
+                <div class="user-info">
+                    <span>Welcome, {{ current_user.name }}</span>
+                    <span class="user-role">Teacher</span>
+                    <a href="{{ url_for('logout') }}" class="btn btn-logout">Logout</a>
+                </div>
+            </div>
+        </header>
+        
+        <nav class="dashboard-nav">
+            <ul>
+                <li><a href="#approve-students" class="nav-link active">Approve Student Data</a></li>
+                <li><a href="#availability" class="nav-link">Availability</a></li>
+                <li><a href="#timetable" class="nav-link">View Timetable</a></li>
+                <li><a href="#notices" class="nav-link">View Notices</a></li>
+                <li><a href="#post-notice" class="nav-link">Post Notice</a></li>
+                <li><a href="#requests" class="nav-link">Send Request</a></li>
+            </ul>
+        </nav>
+        
+        <main class="dashboard-main">
+            <div id="approve-students" class="dashboard-section active">
+                <h2>Pending Student Approvals</h2>
+                <div class="students-approval-container">
+                    <div class="student-card">
+                        <div class="student-info">
+                            <h3>John Doe</h3>
+                            <p><strong>Roll No:</strong> 2024001</p>
+                            <p><strong>Class:</strong> 2nd Year - A</p>
+                            <p><strong>Stream:</strong> Engineering</p>
+                            <p><strong>Email:</strong> john.doe@email.com</p>
+                            <p><strong>Phone:</strong> +1234567890</p>
+                        </div>
+                        <div class="student-actions">
+                            <button class="btn btn-success">Approve</button>
+                            <button class="btn btn-danger">Reject</button>
+                        </div>
+                    </div>
+                    
+                    <div class="student-card">
+                        <div class="student-info">
+                            <h3>Jane Smith</h3>
+                            <p><strong>Roll No:</strong> 2024002</p>
+                            <p><strong>Class:</strong> 2nd Year - A</p>
+                            <p><strong>Stream:</strong> Engineering</p>
+                            <p><strong>Email:</strong> jane.smith@email.com</p>
+                            <p><strong>Phone:</strong> +1234567891</p>
+                        </div>
+                        <div class="student-actions">
+                            <button class="btn btn-success">Approve</button>
+                            <button class="btn btn-danger">Reject</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="availability" class="dashboard-section">
+                <h2>Set Your Availability</h2>
+                <div class="availability-form">
+                    <form>
+                        <div class="form-group">
+                            <label for="day">Select Day</label>
+                            <select id="day" name="day">
+                                <option value="monday">Monday</option>
+                                <option value="tuesday">Tuesday</option>
+                                <option value="wednesday">Wednesday</option>
+                                <option value="thursday">Thursday</option>
+                                <option value="friday">Friday</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="time-slot">Time Slot</label>
+                            <select id="time-slot" name="time-slot">
+                                <option value="9:00-10:00">9:00 - 10:00</option>
+                                <option value="10:00-11:00">10:00 - 11:00</option>
+                                <option value="11:30-12:30">11:30 - 12:30</option>
+                                <option value="1:30-2:30">1:30 - 2:30</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <select id="subject" name="subject">
+                                <option value="Mathematics">Mathematics</option>
+                                <option value="Physics">Physics</option>
+                                <option value="Chemistry">Chemistry</option>
+                                <option value="Computer Science">Computer Science</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="room-type">Room Type</label>
+                            <select id="room-type" name="room-type">
+                                <option value="class">Classroom</option>
+                                <option value="lab">Laboratory</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="division">Division</label>
+                            <select id="division" name="division">
+                                <option value="A">Division A</option>
+                                <option value="B">Division B</option>
+                                <option value="C">Division C</option>
+                                <option value="D">Division D</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="max-students">Maximum Students</label>
+                            <input type="number" id="max-students" name="max-students" min="1" max="60" value="30">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Add Availability</button>
+                    </form>
+                    
+                    <div class="current-availability">
+                        <h3>Current Availability</h3>
+                        <div class="availability-list">
+                            <div class="availability-item">
+                                <span>Monday - 9:00-10:00 - Mathematics - Class A - 30 students</span>
+                                <button class="btn btn-small btn-danger">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="timetable" class="dashboard-section">
+                <h2>My Weekly Timetable</h2>
+                <div class="timetable-container">
+                    <table class="timetable-table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Monday</th>
+                                <th>Tuesday</th>
+                                <th>Wednesday</th>
+                                <th>Thursday</th>
+                                <th>Friday</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>9:00 - 10:00</td>
+                                <td class="subject-cell">2A - Mathematics<br><small>Room: A101</small></td>
+                                <td class="subject-cell">2B - Physics<br><small>Room: Lab 1</small></td>
+                                <td class="free-period">Free Period</td>
+                                <td class="subject-cell">2A - Mathematics<br><small>Room: A101</small></td>
+                                <td class="subject-cell">2C - Mathematics<br><small>Room: A102</small></td>
+                            </tr>
+                            <tr>
+                                <td>10:00 - 11:00</td>
+                                <td class="free-period">Free Period</td>
+                                <td class="subject-cell">2A - Physics<br><small>Room: Lab 1</small></td>
+                                <td class="subject-cell">2B - Mathematics<br><small>Room: A101</small></td>
+                                <td class="free-period">Free Period</td>
+                                <td class="subject-cell">2D - Physics<br><small>Room: Lab 1</small></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="notices" class="dashboard-section">
+                <h2>Notices & Announcements</h2>
+                <div class="notices-container">
+                    <div class="notice-card">
+                        <div class="notice-header">
+                            <h3>Staff Meeting Tomorrow</h3>
+                            <span class="notice-date">Posted: 2024-01-15</span>
+                        </div>
+                        <div class="notice-content">
+                            <p>Important staff meeting tomorrow at 3:00 PM in the conference room. Attendance is mandatory.</p>
+                        </div>
+                        <div class="notice-footer">
+                            <span class="notice-author">Posted by: Admin</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="post-notice" class="dashboard-section">
+                <h2>Post New Notice</h2>
+                <div class="notice-form">
+                    <form>
+                        <div class="form-group">
+                            <label for="notice-title">Notice Title</label>
+                            <input type="text" id="notice-title" name="notice-title" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="notice-content">Notice Content</label>
+                            <textarea id="notice-content" name="notice-content" rows="5" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Post Notice</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div id="requests" class="dashboard-section">
+                <h2>Send Request to Admin</h2>
+                <div class="request-form">
+                    <form>
+                        <div class="form-group">
+                            <label for="request-content">Request Details</label>
+                            <textarea id="request-content" name="request-content" rows="5" 
+                                      placeholder="Describe your request regarding timetable changes or other administrative matters..." required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Send Request</button>
+                    </form>
+                    
+                    <div class="previous-requests">
+                        <h3>Previous Requests</h3>
+                        <div class="request-item">
+                            <div class="request-header">
+                                <h4>Request to change lab timing</h4>
+                                <span class="request-status pending">Pending</span>
+                            </div>
+                            <div class="request-content">
+                                <p>Would like to change Friday lab session from 1:30 PM to 10:00 AM due to scheduling conflict.</p>
+                            </div>
+                            <div class="request-footer">
+                                <span class="request-date">Sent: 2024-01-14</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

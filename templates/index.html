@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Timetable Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Automated Timetable Generator</h1>
+            <p>Efficient scheduling for educational institutions</p>
+        </header>
+        
+        <main>
+            <div class="hero-section">
+                <h2>Welcome to the Future of Academic Scheduling</h2>
+                <p>Our intelligent system automatically generates conflict-free timetables while considering teacher availability, classroom capacity, and student constraints.</p>
+                
+                <div class="cta-buttons">
+                    <a href="{{ url_for('signup') }}" class="btn btn-primary">Get Started</a>
+                    <a href="{{ url_for('login') }}" class="btn btn-secondary">Login</a>
+                </div>
+            </div>
+            
+            <div class="features">
+                <div class="feature-card">
+                    <h3>🎓 Student Portal</h3>
+                    <p>View your personalized timetable and stay updated with important notices.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>👨‍🏫 Teacher Portal</h3>
+                    <p>Manage availability, approve students, and communicate with administration.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>⚙️ Admin Portal</h3>
+                    <p>Generate intelligent timetables, manage requests, and oversee the entire system.</p>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2024 Automated Timetable Generator. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

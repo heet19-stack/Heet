@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Automated Timetable Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Create Account</h1>
+            <p>Choose your role to get started</p>
+        </header>
+        
+        <main>
+            <div class="role-selection">
+                <h2>Select Your Role</h2>
+                <div class="role-cards">
+                    <div class="role-card" onclick="window.location.href='{{ url_for('signup_student') }}'">
+                        <div class="role-icon">🎓</div>
+                        <h3>Student</h3>
+                        <p>Access your timetable and view notices</p>
+                    </div>
+                    
+                    <div class="role-card" onclick="window.location.href='{{ url_for('signup_teacher') }}'">
+                        <div class="role-icon">👨‍🏫</div>
+                        <h3>Teacher</h3>
+                        <p>Manage availability and approve students</p>
+                    </div>
+                    
+                    <div class="role-card" onclick="window.location.href='{{ url_for('signup_admin') }}'">
+                        <div class="role-icon">⚙️</div>
+                        <h3>Administrator</h3>
+                        <p>Generate timetables and manage system</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="back-link">
+                <a href="{{ url_for('index') }}">← Back to Home</a>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

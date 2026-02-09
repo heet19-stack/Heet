@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Automated Timetable Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>Admin Dashboard</h1>
+                <div class="user-info">
+                    <span>Welcome, {{ current_user.name }}</span>
+                    <span class="user-role">Administrator</span>
+                    <a href="{{ url_for('logout') }}" class="btn btn-logout">Logout</a>
+                </div>
+            </div>
+        </header>
+        
+        <nav class="dashboard-nav">
+            <ul>
+                <li><a href="#generate-timetable" class="nav-link active">Generate Timetable</a></li>
+                <li><a href="#edit-timetable" class="nav-link">Edit Timetable</a></li>
+                <li><a href="#post-notice" class="nav-link">Post Notice</a></li>
+                <li><a href="#view-notices" class="nav-link">View Notices</a></li>
+                <li><a href="#view-requests" class="nav-link">View Requests</a></li>
+            </ul>
+        </nav>
+        
+        <main class="dashboard-main">
+            <div id="generate-timetable" class="dashboard-section active">
+                <h2>Generate Automated Timetable</h2>
+                <div class="timetable-generator">
+                    <div class="generator-form">
+                        <h3>Timetable Configuration</h3>
+                        <form>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="academic-year">Academic Year</label>
+                                    <select id="academic-year" name="academic-year">
+                                        <option value="2024-25">2024-25</option>
+                                        <option value="2025-26">2025-26</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="semester">Semester</label>
+                                    <select id="semester" name="semester">
+                                        <option value="1">Semester 1</option>
+                                        <option value="2">Semester 2</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="working-days">Working Days</label>
+                                    <div class="checkbox-group">
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="monday" name="working-days" value="monday" checked>
+                                            <label for="monday">Monday</label>
+                                        </div>
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="tuesday" name="working-days" value="tuesday" checked>
+                                            <label for="tuesday">Tuesday</label>
+                                        </div>
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="wednesday" name="working-days" value="wednesday" checked>
+                                            <label for="wednesday">Wednesday</label>
+                                        </div>
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="thursday" name="working-days" value="thursday" checked>
+                                            <label for="thursday">Thursday</label>
+                                        </div>
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="friday" name="working-days" value="friday" checked>
+                                            <label for="friday">Friday</label>
+                                        </div>
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="saturday" name="working-days" value="saturday">
+                                            <label for="saturday">Saturday</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="time-slots">Time Slots</label>
+                                    <div class="time-slots-config">
+                                        <div class="time-slot">
+                                            <input type="time" value="09:00" readonly>
+                                            <span>-</span>
+                                            <input type="time" value="10:00" readonly>
+                                        </div>
+                                        <div class="time-slot">
+                                            <input type="time" value="10:00" readonly>
+                                            <span>-</span>
+                                            <input type="time" value="11:00" readonly>
+                                        </div>
+                                        <div class="time-slot">
+                                            <input type="time" value="11:30" readonly>
+                                            <span>-</span>
+                                            <input type="time" value="12:30" readonly>
+                                        </div>
+                                        <div class="time-slot">
+                                            <input type="time" value="13:30" readonly>
+                                            <span>-</span>
+                                            <input type="time" value="14:30" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="class-availability">Class & Lab Availability</label>
+                                    <textarea id="class-availability" name="class-availability" rows="3" 
+                                              placeholder="Enter available classrooms and labs with capacities...">A101 - 60 students
+A102 - 60 students
+A103 - 40 students
+Lab 1 - 30 students
+Lab 2 - 30 students
+Lab 3 - 40 students</textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-primary" onclick="generateTimetable()">Generate Timetable</button>
+                                <button type="reset" class="btn btn-secondary">Reset</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="generation-progress" id="generation-progress" style="display: none;">
+                        <h3>Generating Timetable...</h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <p id="progress-status">Analyzing constraints...</p>
+                    </div>
+                    
+                    <div class="generated-timetable" id="generated-timetable" style="display: none;">
+                        <h3>Generated Timetable Preview</h3>
+                        <div class="timetable-preview">
+                            <table class="timetable-table">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Monday</th>
+                                        <th>Tuesday</th>
+                                        <th>Wednesday</th>
+                                        <th>Thursday</th>
+                                        <th>Friday</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="timetable-body">
+                                    <!-- Dynamically generated -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="timetable-actions">
+                            <button class="btn btn-success" onclick="uploadTimetable()">Upload Timetable</button>
+                            <button class="btn btn-warning" onclick="editTimetable()">Make Changes</button>
+                            <button class="btn btn-info" onclick="exportTimetable()">Export</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="edit-timetable" class="dashboard-section">
+                <h2>Edit Current Timetable</h2>
+                <div class="timetable-editor">
+                    <div class="editor-toolbar">
+                        <button class="btn btn-primary">Save Changes</button>
+                        <button class="btn btn-secondary">Reset</button>
+                        <button class="btn btn-info">Export</button>
+                    </div>
+                    
+                    <div class="editable-timetable">
+                        <table class="timetable-table editable">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Monday</th>
+                                    <th>Tuesday</th>
+                                    <th>Wednesday</th>
+                                    <th>Thursday</th>
+                                    <th>Friday</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>9:00 - 10:00</td>
+                                    <td contenteditable="true">2A - Mathematics<br><small>Room: A101</small></td>
+                                    <td contenteditable="true">2B - Physics<br><small>Room: Lab 1</small></td>
+                                    <td contenteditable="true">2C - Chemistry<br><small>Room: Lab 2</small></td>
+                                    <td contenteditable="true">2D - English<br><small>Room: A102</small></td>
+                                    <td contenteditable="true">2A - Computer Science<br><small>Room: Lab 3</small></td>
+                                </tr>
+                                <tr>
+                                    <td>10:00 - 11:00</td>
+                                    <td contenteditable="true">2B - Physics<br><small>Room: Lab 1</small></td>
+                                    <td contenteditable="true">2A - Mathematics<br><small>Room: A101</small></td>
+                                    <td contenteditable="true">2D - Biology<br><small>Room: Lab 2</small></td>
+                                    <td contenteditable="true">2C - History<br><small>Room: A103</small></td>
+                                    <td contenteditable="true">2B - Chemistry<br><small>Room: Lab 2</small></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="post-notice" class="dashboard-section">
+                <h2>Post New Notice</h2>
+                <div class="notice-form">
+                    <form>
+                        <div class="form-group">
+                            <label for="notice-title">Notice Title</label>
+                            <input type="text" id="notice-title" name="notice-title" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="notice-content">Notice Content</label>
+                            <textarea id="notice-content" name="notice-content" rows="5" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="notice-audience">Target Audience</label>
+                            <select id="notice-audience" name="notice-audience">
+                                <option value="all">All Users</option>
+                                <option value="students">Students Only</option>
+                                <option value="teachers">Teachers Only</option>
+                                <option value="specific">Specific Class/Division</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Post Notice</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div id="view-notices" class="dashboard-section">
+                <h2>All Notices</h2>
+                <div class="notices-container">
+                    <div class="notice-card">
+                        <div class="notice-header">
+                            <h3>System Maintenance Notice</h3>
+                            <span class="notice-date">Posted: 2024-01-15</span>
+                        </div>
+                        <div class="notice-content">
+                            <p>The timetable system will undergo maintenance this weekend. Please save your work before Friday evening.</p>
+                        </div>
+                        <div class="notice-footer">
+                            <span class="notice-author">Posted by: Admin</span>
+                            <button class="btn btn-small btn-danger">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="view-requests" class="dashboard-section">
+                <h2>Teacher Requests</h2>
+                <div class="requests-container">
+                    <div class="request-card">
+                        <div class="request-header">
+                            <h4>Request to change lab timing</h4>
+                            <span class="request-status pending">Pending</span>
+                        </div>
+                        <div class="request-content">
+                            <p>Would like to change Friday lab session from 1:30 PM to 10:00 AM due to scheduling conflict.</p>
+                        </div>
+                        <div class="request-footer">
+                            <span class="request-author">From: John Smith (Mathematics)</span>
+                            <span class="request-date">Received: 2024-01-14</span>
+                            <div class="request-actions">
+                                <button class="btn btn-small btn-success">Approve</button>
+                                <button class="btn btn-small btn-danger">Reject</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="request-card">
+                        <div class="request-header">
+                            <h4>Additional classroom needed</h4>
+                            <span class="request-status approved">Approved</span>
+                        </div>
+                        <div class="request-content">
+                            <p>Need an additional classroom for the upcoming examination period.</p>
+                        </div>
+                        <div class="request-footer">
+                            <span class="request-author">From: Jane Doe (Physics)</span>
+                            <span class="request-date">Received: 2024-01-13</span>
+                            <div class="request-actions">
+                                <span class="approved-badge">Approved on 2024-01-14</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
+</body>
+</html>

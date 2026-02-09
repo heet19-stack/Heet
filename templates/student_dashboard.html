@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Automated Timetable Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>Student Dashboard</h1>
+                <div class="user-info">
+                    <span>Welcome, {{ current_user.name }}</span>
+                    <span class="user-role">Student</span>
+                    <a href="{{ url_for('logout') }}" class="btn btn-logout">Logout</a>
+                </div>
+            </div>
+        </header>
+        
+        <nav class="dashboard-nav">
+            <ul>
+                <li><a href="#timetable" class="nav-link active">View Timetable</a></li>
+                <li><a href="#notices" class="nav-link">View Notices</a></li>
+            </ul>
+        </nav>
+        
+        <main class="dashboard-main">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <div id="timetable" class="dashboard-section active">
+                <h2>My Weekly Timetable</h2>
+                <div class="timetable-container">
+                    <div class="timetable-grid">
+                        <table class="timetable-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Monday</th>
+                                    <th>Tuesday</th>
+                                    <th>Wednesday</th>
+                                    <th>Thursday</th>
+                                    <th>Friday</th>
+                                    <th>Saturday</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>9:00 - 10:00</td>
+                                    <td class="subject-cell">Mathematics<br><small>Room: A101</small></td>
+                                    <td class="subject-cell">Physics<br><small>Room: Lab 1</small></td>
+                                    <td class="subject-cell">Chemistry<br><small>Room: Lab 2</small></td>
+                                    <td class="subject-cell">English<br><small>Room: A102</small></td>
+                                    <td class="subject-cell">Computer Science<br><small>Room: Lab 3</small></td>
+                                    <td class="free-period">Free Period</td>
+                                </tr>
+                                <tr>
+                                    <td>10:00 - 11:00</td>
+                                    <td class="subject-cell">Physics<br><small>Room: Lab 1</small></td>
+                                    <td class="subject-cell">Mathematics<br><small>Room: A101</small></td>
+                                    <td class="subject-cell">Biology<br><small>Room: Lab 2</small></td>
+                                    <td class="subject-cell">History<br><small>Room: A103</small></td>
+                                    <td class="subject-cell">Chemistry<br><small>Room: Lab 2</small></td>
+                                    <td class="free-period">Free Period</td>
+                                </tr>
+                                <tr>
+                                    <td>11:00 - 11:30</td>
+                                    <td colspan="6" class="break">Break</td>
+                                </tr>
+                                <tr>
+                                    <td>11:30 - 12:30</td>
+                                    <td class="subject-cell">English<br><small>Room: A102</small></td>
+                                    <td class="subject-cell">Computer Science<br><small>Room: Lab 3</small></td>
+                                    <td class="subject-cell">Mathematics<br><small>Room: A101</small></td>
+                                    <td class="subject-cell">Physics<br><small>Room: Lab 1</small></td>
+                                    <td class="subject-cell">Biology<br><small>Room: Lab 2</small></td>
+                                    <td class="free-period">Free Period</td>
+                                </tr>
+                                <tr>
+                                    <td>12:30 - 1:30</td>
+                                    <td colspan="6" class="lunch">Lunch Break</td>
+                                </tr>
+                                <tr>
+                                    <td>1:30 - 2:30</td>
+                                    <td class="subject-cell">History<br><small>Room: A103</small></td>
+                                    <td class="subject-cell">Chemistry<br><small>Room: Lab 2</small></td>
+                                    <td class="subject-cell">English<br><small>Room: A102</small></td>
+                                    <td class="subject-cell">Computer Science<br><small>Room: Lab 3</small></td>
+                                    <td class="subject-cell">Mathematics<br><small>Room: A101</small></td>
+                                    <td class="free-period">Free Period</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="notices" class="dashboard-section">
+                <h2>Notices & Announcements</h2>
+                <div class="notices-container">
+                    <div class="notice-card">
+                        <div class="notice-header">
+                            <h3>Mid-Term Examination Schedule</h3>
+                            <span class="notice-date">Posted: 2024-01-15</span>
+                        </div>
+                        <div class="notice-content">
+                            <p>Mid-term examinations will commence from next week. Please check the detailed schedule on the notice board.</p>
+                        </div>
+                        <div class="notice-footer">
+                            <span class="notice-author">Posted by: Admin</span>
+                        </div>
+                    </div>
+                    
+                    <div class="notice-card">
+                        <div class="notice-header">
+                            <h3>Lab Safety Guidelines</h3>
+                            <span class="notice-date">Posted: 2024-01-14</span>
+                        </div>
+                        <div class="notice-content">
+                            <p>All students must follow the lab safety guidelines during practical sessions. Lab coats are mandatory.</p>
+                        </div>
+                        <div class="notice-footer">
+                            <span class="notice-author">Posted by: Physics Department</span>
+                        </div>
+                    </div>
+                    
+                    <div class="notice-card">
+                        <div class="notice-header">
+                            <h3>Assignment Submission Deadline</h3>
+                            <span class="notice-date">Posted: 2024-01-13</span>
+                        </div>
+                        <div class="notice-content">
+                            <p>Mathematics assignment Chapter 3 is due on Friday. Late submissions will not be accepted.</p>
+                        </div>
+                        <div class="notice-footer">
+                            <span class="notice-author">Posted by: Mathematics Teacher</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
